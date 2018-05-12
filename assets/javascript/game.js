@@ -1,5 +1,7 @@
 /* 
-Standardized names as following: luke-sykwalker han-solo r2-d2 bb-8
+I know it isn't finished, this is the best I've gotten thus far. I'm going to keep on working on it to improve!
+
+
 
 */
 
@@ -9,6 +11,10 @@ Standardized names as following: luke-sykwalker han-solo r2-d2 bb-8
 
 var startGame = false;
 
+var player1 = {};
+
+var defender = {};
+
 
 // objects
 
@@ -17,96 +23,48 @@ var lukeSkywalkerObj = {
     html: $(".col-sm-3.luke-skywalker"),
     name: "Luke Skywalker",
     enemy: false,
+    defender: false,
     hp: 150,
     attackPower: 20,
     counterAttackPower: 5,
-    attack: function () {
-        console.log(this.attackPower);
-    },
     htmlValue: "luke-skywalker",
-    htmlString: '<div class="col-sm-3"> \
-        <div class="card luke-skywalker" value = "luke-skywalker">\
-            <img class="card-img-top" src="/assets/images/luke-skywalker.jpg"  alt="Luke Sykwalker">\
-            <h5 class="card-title">Luke Skywalker</h5>\
-            <div class="card-body">\
-                150\
-            </div>\
-        </div>\
-    </div>',
 }
 
 var hanSoloObj = {
     html: $(".col-sm-3.han-solo"),
     name: "Han Solo",
     enemy: false,
+    defender: false,
     hp: 150,
     attackPower: 20,
     counterAttackPower: 5,
-    attack: function () {
-        console.log(this.attackPower);
-    },
     htmlValue: "han-solo",
-    htmlString: '<div class="col-sm-3">\
-         <div class="card han-solo" value = "han-solo">\
-            <img class="card-img-top" src="/assets/images/han-solo.jpg" alt="Han Solo">\
-            <h5 class="card-title">Han Solo</h5>\
-            <div class="card-body">\
-                150\
-            </div>\
-        </div>\
-    </div>'
 }
 
 var r2d2Obj = {
     html: $(".col-sm-3.r2-d2"),
     name: "R2-D2",
     enemy: false,
+    defender: false,
     hp: 150,
     attackPower: 20,
     counterAttackPower: 5,
-    attack: function () {
-        console.log(this.attackPower);
-    },
     htmlValue: "r2-d2",
-    htmlString: '<div class="col-sm-3">\
-        <div class="card r2-d2" value = "r2-d2">\
-            <img class="card-img-top" src="/assets/images/r2-d2.jpg" alt="R2-D2">\
-            <h5 class="card-title">R2-D2</h5>\
-            <div class="card-body">\
-                150\
-            </div>\
-        </div>\
-    </div>'
 }
 
 var bb8Obj = {
     html: $(".col-sm-3.bb-8"),
     name: "BB-8",
     enemy: false,
+    defender: false,
     hp: 150,
     attackPower: 20,
     counterAttackPower: 5,
-    attack: function () {
-        console.log(this.attackPower);
-    },
     htmlValue: "bb-8",
-    htmlString: '<div class="col-sm-3">\
-        <div class="card bb-8"value = "bb-8">\
-            <img class="card-img-top" src="/assets/images/bb-8.jpg" alt="BB-8">\
-            <h5 class="card-title">BB-8</h5>\
-            <div class="card-body">\
-                150\
-            </div>\
-        </div>\
-    </div>'
 }
 
 
 var objectArray = [lukeSkywalkerObj, hanSoloObj, r2d2Obj, bb8Obj];
-
-
-
-
 
 
 //functions
@@ -125,9 +83,11 @@ function setBoard(target, htmlValue) {
 
         if (character.htmlValue !== htmlValue) {
             $(".row.enemies").append(character.html.clone());
+            character.enemy = true;
         }
         //console.log("character", character);
-    }) 
+    })
+
 }
 
 
@@ -146,26 +106,45 @@ function setDefender() {
         $(".row.defender").empty();
         $(".row.defender").append(target.clone());
 
-        $(".row.characters").off("click");       
+        objectArray.forEach(function (character) {
+            if (character.htmlValue === htmlValue) {
+                character.defender = true;
+
+            }
+        })
+
+        $(".row.characters").off("click");
     })
 };
 
-
-
-
-////////This is where you left off!
 
 function stopClick() {
     $(".row.characters").off("click");
 }
 
+function setOpponets() {
 
-function fight (){
-    $(".fight").click(function(){
+    $(".row.enemies").click(function () {
 
-        
+        objectArray.forEach(function (character) {
+            console.log("These are the character", character);
 
+            if (character.enemy === false) {
+                player1 = character;
+            }
+        })
 
+        console.log("Player 1", player1);
+
+        objectArray.forEach(function (character) {
+            console.log("These are the character", character);
+
+            if (character.defender === true) {
+                defender = character;
+            }
+        })
+
+        console.log("defender", defender);
     });
 }
 
@@ -181,16 +160,6 @@ $(document).ready(function () {
         var target = $(event.target).closest(".col-sm-3");
         var htmlValue = target.attr("value");
 
-        /* resetEnemies();
-        $(".row.enemies").empty(); */
-
-
-
-
-
-
-        //target debugging
-
         console.log("target:", target);
         console.log("htmlVale", htmlValue);
 
@@ -198,7 +167,7 @@ $(document).ready(function () {
 
         setDefender();
 
-        fight();
+        setOpponets();
 
         /*    //obj debugging
         console.log("----------------------");
